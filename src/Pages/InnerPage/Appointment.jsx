@@ -1,5 +1,7 @@
 import React from "react";
 import BreadCrumb from "../../BreadCrumb/BreadCrumb";
+import { db } from "../../firebase"; // Import Firestore instance
+import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
 
 const Appointment = () => {
   const [formData, setFormData] = React.useState({
@@ -22,9 +24,16 @@ const Appointment = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponseMessage("Your appointment has been submitted successfully.");
+    try {
+      const appointmentsCollection = collection(db, "appointments"); // Reference to the collection
+      await addDoc(appointmentsCollection, formData); // Add form data to Firestore
+      setResponseMessage("Your appointment has been submitted successfully.");
+    } catch (error) {
+      console.error("Error submitting appointment:", error);
+      setResponseMessage("Failed to submit your appointment. Please try again.");
+    }
   };
 
   return (
@@ -160,6 +169,11 @@ const Appointment = () => {
             </button>
           </div>
         </form>
+        {responseMessage && (
+          <p className="mt-4 text-center text-lightBlack dark:text-white">
+            {responseMessage}
+          </p>
+        )}
       </div>
     </div>
   );

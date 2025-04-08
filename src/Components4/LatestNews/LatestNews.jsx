@@ -1,21 +1,38 @@
+import { useState, useEffect } from "react";
 import { BsCalendar4 } from "react-icons/bs";
 import { BiUserCircle } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { fetchAvailabilityStatus } from "../../firebase"; // Import the new function
 
 const LatestNews = () => {
+  const [status, setStatus] = useState("Loading..."); // State for availability status
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const availabilityStatus = await fetchAvailabilityStatus(); // Fetch status from Firebase
+        setStatus(availabilityStatus === "Available" ? "Available" : "Unavailable");
+      } catch (error) {
+        console.error("Error fetching availability status:", error);
+        setStatus("Unavailable"); // Default to "Unavailable" on error
+      }
+    };
+    fetchStatus();
+  }, []);
+
   return (
     <section className="bg-[#ededed] dark:bg-normalBlack py-20 2xl:py-[120px]">
       <div className="Container">
         {/* section title */}
         <div className="text-center px-5">
           <p className="text-base leading-7 md:leading-10 lg:leading-[40px]  text-khaki font-normal font-Lora">
-          Daily Routines
+            Daily Routines
           </p>
           <h3
             className="text-lightBlack dark:text-white text-2xl sm:text-3xl md:text-4xl lg:text-[40px] 2xl:text-[45px] leading-5 md:leading-7 lg:leading-10  2xl:leading-[45px]
            font-medium font-Garamond"
           >
-            Today Available At Office
+            Today {status} At Office
           </h3>
         </div>
 

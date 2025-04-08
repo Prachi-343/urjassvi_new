@@ -8,8 +8,20 @@ import "keen-slider/keen-slider.min.css";
 import { IoIosCall } from "react-icons/io";
 import { MdEmail, MdOutlineShareLocation } from "react-icons/md";
 import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
+import { fetchAllProducts } from "../../firebase";
 
 const Room = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await fetchAllProducts();
+      setProducts(data);
+    };
+    fetchProducts();
+  }, []);
+
   // facilities slider breckpoints
   const [sliderRef] = useKeenSlider({
     breakpoints: {
@@ -69,56 +81,46 @@ const Room = () => {
           {/* Rooms Slider Container */}
 
           <div className="mt-14 2xl:mt-[60px] grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-[30px]">
-            {/* Room - 1 */}
-            <div
-              className="overflow-x-hidden 3xl:w-[410px] group"
-              data-aos="fade-up"
-              data-aos-duration="1000"
-            >
-              <div className="relative">
-                <div className="overflow-hidden">
-                  <img
-                    src="/images/inner/roms-1.jpg"
-                    className="w-full h-full object-cover group-group-hover:scale-110 transition-all duration-300"
-                    alt=""
-                  />
-                </div>
-                <div className="px-5 3xl:px-6 py-2 inline-flex bg-khaki text-sm  items-center justify-center text-white  absolute top-[10px] right-[10px] ">
-                  <span className="">₹1000</span>
-                </div>
-
-                <Link to={"/room_details"}>
-                  <button className="flex items-center justify-center text-[15px] leading-[38px] bg-khaki  absolute bottom-0 -left-40 px-6 py-1 text-white  group-hover:left-0 transition-all duration-300">
-                    View Details{" "}
-                    <BsArrowRight className="w-4 h-4 ml-2  text-white" />{" "}
-                  </button>
-                </Link>
-              </div>
-              <div className="font-Garamond">
-                <div className=" border-[1px] border-[#e8e8e8] dark:border-[#424242]  border-t-0">
-                  <div className="py-6 px-[30px]">
-                    <Link
-                      to="/find_room"
-                      state={{ price: "450", title: "Delux Family Rooms" }}
-                    >
-                      <h2 className="text-2xl lg:text-[24px] xl:text-[28px] leading-[26px] font-semibold text-lightBlack dark:text-white py-4">
-                        Product Title
-                      </h2>
-                    </Link>
-                    <p className="text-sm font-normal text-gray  dark:text-lightGray font-Lora">
-                      Description of the product goes here. It should be brief and
-                    </p>
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="overflow-x-hidden 3xl:w-[410px] group"
+                data-aos="fade-up"
+                data-aos-duration="1000"
+              >
+                <div className="relative">
+                  <div className="overflow-hidden">
+                    <img
+                      src={product.photoURL}
+                      className="w-full h-full object-cover group-group-hover:scale-110 transition-all duration-300"
+                      alt={product.name}
+                    />
                   </div>
-                  <div className="  border-t-[1px] border-[#e8e8e8] dark:border-[#424242]  py-5">
-                    <div className="px-[30px] flex items-center justify-between">
-                      <div className="">
-                        <span className="font-Lora text-base flex items-center ">
-                          <img
-                            src="/images/home-1/room-bottom-icon.png"
-                            alt=""
-                          />
+                  <div className="px-5 3xl:px-6 py-2 inline-flex bg-khaki text-sm items-center justify-center text-white absolute top-[10px] right-[10px]">
+                    <span>₹{product.price}</span>
+                  </div>
+                  <Link to="/room_details" state={product}>
+                    <button className="flex items-center justify-center text-[15px] leading-[38px] bg-khaki absolute bottom-0 -left-40 px-6 py-1 text-white group-hover:left-0 transition-all duration-300">
+                      View Details <BsArrowRight className="w-4 h-4 ml-2 text-white" />
+                    </button>
+                  </Link>
+                </div>
+                <div className="font-Garamond">
+                  <div className="border-[1px] border-[#e8e8e8] dark:border-[#424242] border-t-0">
+                    <div className="py-6 px-[30px]">
+                      <h2 className="text-2xl lg:text-[24px] xl:text-[28px] leading-[26px] font-semibold text-lightBlack dark:text-white py-4">
+                        {product.name}
+                      </h2>
+                      <p className="text-sm font-normal text-gray dark:text-lightGray font-Lora">
+                        {product.description}
+                      </p>
+                    </div>
+                    <div className="border-t-[1px] border-[#e8e8e8] dark:border-[#424242] py-5">
+                      <div className="px-[30px] flex items-center justify-between">
+                        <span className="font-Lora text-base flex items-center">
+                          <img src="/images/home-1/room-bottom-icon.png" alt="" />
                           <span className="ml-[10px] text-gray dark:text-lightGray">
-                            2 stock
+                            {product.stock} stock
                           </span>
                         </span>
                       </div>
@@ -126,11 +128,10 @@ const Room = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
-    
     </section>
   );
 };

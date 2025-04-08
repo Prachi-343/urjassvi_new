@@ -7,16 +7,18 @@ import {
   BsTwitter,
 } from "react-icons/bs";
 import { FaFacebookF, FaLinkedinIn, FaPinterestP } from "react-icons/fa6";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import "../../Components4/Testimonial/testimonials.css";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { Link } from "react-router-dom";
 import FsLightbox from "fslightbox-react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
+
 const About = () => {
   const [setCurrentSlide] = useState(0);
-  // const [setLoaded] = useState(false);
   const [toggler, setToggler] = useState(false);
   const [sliderRef] = useKeenSlider({
     breakpoints: {
@@ -35,10 +37,43 @@ const About = () => {
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
     },
-    created() {
-      // setLoaded(true);
-    },
   });
+
+  const [latestBlogs, setLatestBlogs] = useState([]);
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchLatestBlogs = async () => {
+      const blogCollection = collection(db, "blogs");
+      const blogSnapshot = await getDocs(blogCollection);
+      const blogList = blogSnapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 3);
+      setLatestBlogs(blogList);
+    };
+
+    fetchLatestBlogs();
+  }, []);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const reviewsCollection = collection(db, "reviews");
+      const reviewsSnapshot = await getDocs(reviewsCollection);
+      const reviewsList = reviewsSnapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .slice(0, 3); // Limit to 3 reviews
+      setReviews(reviewsList);
+    };
+
+    fetchReviews();
+  }, []);
 
   return (
     <section className="">
@@ -139,37 +174,35 @@ const About = () => {
             data-aos="zoom-in-up"
             data-aos-duration="1000"
           >
-            <div className="mt-[60px] keen-slider " ref={sliderRef}>
-              
-              {/* slide - 1 */}
-              <div className="keen-slider__slide number-slide1 group ">
-                <div className="bg-white dark:bg-normalBlack group-hover:bg-khaki dark:hover:bg-khaki transition-all ease-in-out duration-500 p-[30px] relative before:absolute before:w-6 before:h-6 before:bg-white before:group-hover:bg-khaki  dark:before:bg-normalBlack before:rotate-45 before:left-[37px] before:-bottom-[13px] ">
-                  <p className="font-Lora text-sm lg:text-base leading-[26px] text-gray dark:text-lightGray group-hover:text-white  font-normal mt-7 ">
-                    The owner and staff were extremely helpful and kind and took
-                    time to ensure that we had extra and places to visit.
+            <div className="mt-[60px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {reviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="bg-white dark:bg-normalBlack group-hover:bg-khaki dark:hover:bg-khaki transition-all ease-in-out duration-500 p-[30px] relative before:absolute before:w-6 before:h-6 before:bg-white before:group-hover:bg-khaki dark:before:bg-normalBlack before:rotate-45 before:left-[37px] before:-bottom-[13px]"
+                >
+                  <p className="font-Lora text-sm lg:text-base leading-[26px] text-gray dark:text-lightGray group-hover:text-white font-normal mt-7">
+                    {review.review}
                   </p>
-                </div>
-                <div className="flex items-center mt-10 lg:mt-[51px]">
-                  <div className="ml-5 md:ml-6">
-                    <h4 className="text-lg sm:text-xl md:text-2xl leading-[28px] text-[#041341] dark:text-white font-medium font-Garamond ">
-                      Marii Brown
-                    </h4>
+                  <div className="flex items-center mt-10 lg:mt-[51px]">
+                    <div className="ml-5 md:ml-6">
+                      <h4 className="text-lg sm:text-xl md:text-2xl leading-[28px] text-[#041341] dark:text-white font-medium font-Garamond">
+                        {review.name}
+                      </h4>
+                    </div>
                   </div>
                 </div>
-              </div>
-            
-            
+              ))}
             </div>
           </div>
         </div>
       </section>
+      
       {/* Latest Blog */}
-
-      <div className=" dark:bg-normalBlack">
+      <div className="dark:bg-normalBlack">
         <section className="Container py-20 lg:py-[120px]">
           {/* Section Header */}
           <div
-            className=" text-center mx-auto  px-5 sm:px-8 md:px-[80px] lg:px-[120px] xl:px-[200px] 2xl:px-[335px]"
+            className="text-center mx-auto px-5 sm:px-8 md:px-[80px] lg:px-[120px] xl:px-[200px] 2xl:px-[335px]"
             data-aos="fade-up"
             data-aos-duration="1000"
           >
@@ -191,54 +224,47 @@ const About = () => {
             Dive into the cosmic world of astrology with Urjassvi. Discover insights about celestial influences, vastu tips, and astrological guidance to enrich your life.
             </p>
           </div>
-          {/* all blogs are here */}
+          {/* All blogs are here */}
           <div className="relative">
-            <div className="mt-14 2xl:mt-[60px] keen-slider" ref={sliderRef}>
-              {/* slide - 1 */}
-              <div className="keen-slider__slide number-slide1 ">
-                {/* card one */}
+            <div className="mt-14 2xl:mt-[60px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {latestBlogs.map((blog) => (
                 <div
+                  key={blog.id}
                   className="overflow-hidden 3xl:w-[410px] group"
                   data-aos="fade-up"
                   data-aos-duration="1000"
                 >
                   <div className="relative">
                     <img
-                      src="/images/home-1/blog-1.jpg "
+                      src={blog.imageURL}
                       className="w-full h-full object-cover"
-                      alt=""
+                      alt={blog.title}
                     />
                   </div>
                   <div className="font-Garamond border border-[#e8e8e8] dark:border-[#424242] border-t-0">
-                    <div className="py-6 px-[30px] lg:px-5 xl:px-[25px] ">
+                    <div className="py-6 px-[30px] lg:px-5 xl:px-[25px]">
                       <div className="flex items-center space-x-6">
                         <p className="text-sm lg:text-base leading-[26px] text-gray dark:text-lightGray font-normal uppercase mr-7 ml-3 relative before:absolute before:w-[7px] before:h-[7px] before:left-[-13px] before:bg-[#d1d1d1] dark:before:bg-khaki before:top-[9px]">
-                          August 10, 2023
+                          {new Date(blog.createdAt).toLocaleDateString()}
                         </p>
                         <p className="text-sm lg:text-base leading-[26px] text-gray dark:text-lightGray font-normal uppercase mr-7 ml-3 relative before:absolute before:w-[7px] before:h-[7px] before:left-[-13px] before:bg-[#d1d1d1] dark:before:bg-khaki before:top-[9px]">
-                          Interior
+                          {blog.title}
                         </p>
                       </div>
-                      <Link to="/blog">
+                      <Link to={`/blog`}>
                         <h2 className="text-xl sm:text-[22px] xl:text-2xl 2xl:text-[26px] leading-[34px] font-semibold text-lightBlack dark:text-white py-2 sm:py-3 md:py-4 hover:underline underline-offset-2">
-                          Luxury Hotel for Traveling Spot USA, California
+                          {blog.content}
                         </h2>
                       </Link>
                     </div>
-                    <div className="  border-t-[1px] border-[#e8e8e8] dark:border-[#424242]  py-2 lg:py-3">
-                      <div className="px-[30px] flex items-center justify-between ">
-                        <div className="">
-                          <span className=" text-sm sm:text-base flex items-center ">
-                          </span>
-                        </div>
-                        <span className="">
-                        </span>
+                    <div className="border-t-[1px] border-[#e8e8e8] dark:border-[#424242] py-2 lg:py-3">
+                      <div className="px-[30px] flex items-center justify-between">
+                        {/* Additional blog details can go here */}
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              
+              ))}
             </div>
           </div>
         </section>
