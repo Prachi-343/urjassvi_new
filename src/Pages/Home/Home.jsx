@@ -6,26 +6,15 @@ import HeroSection from "../../Components4/HeroSection/HeroSection";
 import LatestNews from "../../Components4/LatestNews/LatestNews";
 import Testimonial from "../../Components4/Testimonial/Testimonial";
 import WelcomeSection from "../../Components4/WelcomeSection/WelcomeSection";
+import Store from "../../Components4/Store/Store";
 
 const Home = () => {
-  // useEffect(() => {
-  //   const checkFirebase = async () => {
-  //     try {
-  //       const listings = await testFirebaseConnection();
-  //       console.log("Firebase is connected. Listings:", listings);
-  //     } catch (error) {
-  //       console.error("Failed to connect to Firebase:", error);
-  //     }
-  //   };
-
-  //   checkFirebase();
-  // }, []);
-
   return (
     <>
       <HeroSection />
       <WelcomeSection />
       <ExtraService />
+      <Store />
       <BookingVideo />
       <Testimonial />
       <LatestNews />

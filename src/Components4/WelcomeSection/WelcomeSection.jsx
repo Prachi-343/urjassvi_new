@@ -3,11 +3,12 @@ import FsLightbox from "fslightbox-react";
 import { TbPlayerPlayFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
-import { db } from "../../firebase"; // Adjust the path to your firebase.js file
+import { db, fetchAvailabilityStatus } from "../../firebase"; // Adjust the path to your firebase.js file
 
 const WelcomeSection = () => {
   const [toggler, setToggler] = useState(false);
   const [latestVideo, setLatestVideo] = useState("");
+  const [status, setStatus] = useState("Loading..."); // State for availability status
 
   // Fetch the latest video from Firebase
   useEffect(() => {
@@ -28,6 +29,19 @@ const WelcomeSection = () => {
     };
 
     fetchLatestVideo();
+  }, []);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const availabilityStatus = await fetchAvailabilityStatus(); // Fetch status from Firebase
+        setStatus(availabilityStatus === "Available" ? "Available" : "Unavailable");
+      } catch (error) {
+        console.error("Error fetching availability status:", error);
+        setStatus("Unavailable"); // Default to "Unavailable" on error
+      }
+    };
+    fetchStatus();
   }, []);
 
   return (
@@ -80,6 +94,12 @@ const WelcomeSection = () => {
               LEARN MORE
             </button>
           </Link>
+          <h2
+            className="text-lightBlack dark:text-white text-3xl md:text-4xl lg:text-[40px] 2xl:text-[45px] leading-7 md:leading-10 lg:leading-[50px] 2xl:leading-[66px]
+           font-semibold font-Garamond mb-3 mt-3 md:mt-0 "
+          >
+            Today {status} At Office
+          </h2>
         </div>
       </div>
     </section>

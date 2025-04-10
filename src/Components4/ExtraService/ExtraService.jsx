@@ -51,7 +51,7 @@ const ExtraService = () => {
                 Discover the secrets of your life with a personalized birth journal based on your unique astrological chart.
                 </p>
                 <div className="float-left">
-                  <Link to={"/services"}>
+                  <Link to={"/appointment"}>
                     <button className="btn-primary">Learn more</button>
                   </Link>
                 </div>
@@ -77,7 +77,7 @@ const ExtraService = () => {
 
                 </p>
                 <div className="float-left">
-                  <Link to={"/services"}>
+                  <Link to={"/appointment"}>
                     <button className="btn-primary">Learn more</button>
                   </Link>
                 </div>
@@ -102,7 +102,7 @@ const ExtraService = () => {
                 Unveil hidden truths about your personality and destiny with expert face reading analysis.
                 </p>
                 <div className="float-left">
-                  <Link to={"/services"}>
+                  <Link to={"/appointment"}>
                     <button className="btn-primary">Learn more</button>
                   </Link>
                 </div>
@@ -130,7 +130,7 @@ const ExtraService = () => {
                 Unlock simple yet powerful remedies for a better life with Lal Kitab astrology.
                 </p>
                 <div className="float-left">
-                  <Link to={"/services"}>
+                  <Link to={"/appointment"}>
                     <button className="btn-primary">Learn more</button>
                   </Link>
                 </div>
@@ -155,7 +155,7 @@ const ExtraService = () => {
                 Harness the power of gemstones to attract positivity, success, and well-being in your life.
                 </p>
                 <div className="float-left">
-                  <Link to={"/services"}>
+                  <Link to={"/appointment"}>
                     <button className="btn-primary">Learn more</button>
                   </Link>
                 </div>
@@ -180,7 +180,7 @@ const ExtraService = () => {
                 Identify and resolve Kundli Dosh with expert remedies for a harmonious and prosperous life.
                 </p>
                 <div className="float-left">
-                  <Link to={"/services"}>
+                  <Link to={"/appointment"}>
                     <button className="btn-primary">Learn more</button>
                   </Link>
                 </div>

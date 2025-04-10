@@ -1,13 +1,8 @@
-import { FaStar } from "react-icons/fa";
 import BreadCrumb from "../../BreadCrumb/BreadCrumb";
 import { Link } from "react-router-dom";
-import { BsArrowRight, BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { HiArrowLongRight } from "react-icons/hi2";
+import { BsArrowRight } from "react-icons/bs";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
-import { IoIosCall } from "react-icons/io";
-import { MdEmail, MdOutlineShareLocation } from "react-icons/md";
-import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import { fetchAllProducts } from "../../firebase";
 

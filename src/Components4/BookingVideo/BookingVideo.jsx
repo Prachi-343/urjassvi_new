@@ -40,7 +40,7 @@ const BookingVideo = () => {
           <img
             src="/images/home-4/section-sahpe.png"
             alt=""
-            className="mx-auto"
+            className="mx-auto w-48 h-48"
           />
 
           <div className="mt-2 lg:mt-3 mb-2">
